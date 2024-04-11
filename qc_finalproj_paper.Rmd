@@ -1,0 +1,104 @@
+---
+title: "Hybrid Quantum Computing"
+author: 
+  - Spencer Obiero^[sobiero@bates.edu]
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+affil: "Bates College, Lewiston, ME"
+knit: (function(inputFile, encoding) { 
+      rmarkdown::render(inputFile,
+                        encoding=encoding, 
+                        output_dir='../outputs') })
+output:
+  bookdown::pdf_document2:
+    toc: false
+    toc_depth: 2
+    number_sections: true
+    fig_caption: true
+    df_print: kable
+    theme: sky
+    center: true
+    highlight: tango
+    citation_package: natbib
+    keep_tex: true
+    latex_engine: pdflatex
+header-includes:
+  - \usepackage{amsmath, physics, braket}
+  - \usepackage{amssymb}
+  - \usepackage{amsfonts}
+  - \usepackage{multicol}
+  - \usepackage{capt-of}
+  - \usepackage{graphicx}
+  - \setlength{\columnsep}{1cm}
+  - \usepackage{fancyhdr}
+  - \usepackage{float}
+fontsize: 10pt
+geometry: margin = 1in
+bibliography: qcBibliography.bib
+biblio-style: apalike
+---
+
+```{r setup, include = T, echo = F}
+knitr::opts_chunk$set(fig.width = 8, collapse = T, echo = F, message = F)
+```
+
+\pagestyle{fancy}
+\fancyhf[RH]{Bates College, Lewiston, ME}
+\fancyhf[LH]{Department of Physics \& Astronomy}
+
+\maketitle
+\begin{abstract}
+\par
+The idea of harnessing the power of atoms for computation has been around for so long. However, it wasn't until in 1994 when Peter \cite{Shor_1997} invented the factoring algorithm and in 1995 when Lov \cite{grover1996fast} invented the Grover Search Algorithm that people's interest for realizing quantum computers got bigger. Many people became intrigued by the futuristic vision of developing quantum computers. Moreover, the thought of breaking the RSA code was becoming a reality\footnote{In his paper, Shor speculates this possibility but then points out the problem of noise and decoherence as limiting factors}; people thought that quantum computers would be able to enhance this quest and many more. Consequently, more research kicked off and since then, there have been many quantum algorithms developed speculating the utilization of quantum computing. The problem, however, is that the realization of actual quantum computers has proven to be really hard due to noise and other physical limitations, one of which is described in this paper. While there are firms such as Google and IBM, to mention a few with actual quantum computers, these machines face the problem of decoherence. Decoherence is the tendency of a quantum state to be short lived due to environmental interactions. Because of short coherence, many algorithms are deemed to be futile as not much can be done in a short period of time. For instance, simulating a certain material might involve a lot of time and memory as demonstrated by \cite{Aspuru_Guzik_2005}, and this might be hard to do with the time constraint posed by decoherence in quantum systems.
+\par
+This paper demonstrates ideas that involve combining both classical and quantum computing to circumvent the challenge of decoherence. We particularly look at a simple demonstration of quantum simulation, where we show how to prepare a specific state using quantum circuits. We then use classical algorithms such as optimization to get the best values to parameterize the state we would like to use in our simulation. This process is iterated until global properties of our desired simulations are achieved.
+
+\end{abstract}
+
+\begin{multicols}{2}
+
+\section{Introduction}
+\par
+Prior to Shor and Groover, the fathers of quantum simulations such as R. P. \cite{feynman1982} and Seth \cite{lloyd1996} envisioned the idea of using variational circuits to utilize the power of quantum states. There are many ways to approach this problem. 
+\par
+The first one involves superconducting architecture, in which microwave pulses are used to control the speeds of items used in computation. At low temperatures, it is easy to harness the power of quantum computation because of the behavior of the atom but this is costly due to the cooling requirement of the system. Moreover, it is hard to achieve a large quantum circuit depth due to to complexity that comes with quantum gates such as the H and the Controlled-NOT as demonstrated by \cite{PhysRevLett.104.010503}.
+\par
+The second involves trapped ions, in which charged atomic particles are confined in a magneitc field, and the spins of the atoms used as our basis for computation. This mechanism has promising speculations but as seen in the papers by \cite{Hempel_2018}, simulating simple gates such as CNOT, though achievable, involves a lot of complexity making it hard to scale up.
+\par
+Photonic polarization is another technique which as seen in this paper by \cite{Peruzzo2013AVE}, can be done in room temperature thus overcoming the cost of cooling associated with superconducting architectures. The problem with photons, however, is that they are easy to escape, and cannot be stored for future computation. Moreover, it is hard to control for background noise when conducting experiments with photons, even if it is in a dark room.
+\par
+While quantum scientist are still in the process of researching for better ways to improve quantum computation to achieve optimum utility, we can incorporate quantum ideas into classical computation and combine the two to potentially get the best of both worlds. Below, we demonstrate an example of how this could be done by solving an optimization problem, for finding the low cost parameters for a quantum state, given a mixing and cost hamiltonian.
+
+\section{Methodology}
+
+While describing a quantum system, a hamiltonian is used to specify the energy descriptors for the system, e.g. a hamiltonian involving terms that indicate magnetic properties used to characterize interaction between nearest neighbors of particles within our quantum system may be used for the quantum ising model. For this problem, we use simple mixing and cost hamiltonian represented by a Pauli X and Pauli Z respectively to represent the bias we want to minimize - this is a simplification of the hamiltonian that \cite{verdon2019quantum} uses in their paper on quantum algorithms for supervised learning. With quantum circuit analysis, it can be shown that our desired hamiltonian can be represented by the circuit below:
+
+\floatplacement{figure}{H}
+```{r methodology1, echo = F, eval = T, fig.cap="representing our hamiltonian in a simple circuit parameterized by $\\beta = \\alpha = 0$", fig.align="center", fig.show="hold", out.width="100%", out.height = "40%"}
+knitr::include_graphics("../images/varCircs.png")
+```
+
+We use scipy's minimize() function to optimize the parameters that potentially characterize the state that minimizes the bias hamiltonian. After we do the optimization, we see that the state we want is: $\ket{00}$ or $\ket{11}$ of the two as shown in the figure \ref{fig:methodology2}
+
+\floatplacement{figure}{H}
+```{r methodology2,echo = F, fig.cap = "the $\\ket{00}$ and $\\ket{11}$ kets minimize our cost hamiltonian", eval = T, fig.show='hold', fig.align='center', out.width="100%", out.height = "50%"}
+knitr::include_graphics("../images/varCircs_state.png")
+```
+
+\section{Results}
+\par
+As expected, the states that minimize our cost hamiltonian are the ones shown above ($\ket{00}$ \& $\ket{11}$); these are the eigenvalues of the Pauli Z matrix which in this case represents the bias hamiltonian. This seems trivial but for illustrative purposes it works out fine. For practical purposes, more involved and complex hamiltonians are used. Getting these types of hamiltonians and encode them into mathematical objects requires some expertise in quantum mechanics and advanced quantum computation.  Once the hamiltonian is obtained, one proceeds to the preparation of the ansatz state as demonstrated above. Finally, the punchline in our simple algorithm is in the parameterization of the ansatz states with regard to the hamiltonian in question; that's where the classical optimization comes in handy. With more complex hamiltonians, the heuristic idea remains the same - the difference could only manifest when encoding the hamiltonian into a matrix or circuit. This is the idea that builds the foundation of Quantum Variational Eigensovers (VQE) as demonstrated by \cite{Hempel_2018} and \cite{Peruzzo2013AVE}. Moreover, \cite{alam2019analysis} uses this idea to implement the quantum approximation optimization algorithm, which is a tool that is being developed for quantum machine learning and is a gem specifically in training neural networks.
+
+\section{Discussion}
+\par
+As demonstrated above, our algorithm works for a simple case of using Pauli X and Pauli Z to represent our hamiltonian. Again, with different hamiltonians, the expectation is that the algorithm still works but more thought needs to be put in the encoding of data.
+\par
+A realization of this simple model may be done using ion traps, which provide well defined hamiltonians that can be used to describe the system. This choice gets rid of the disadvantage associated with cooling resources thus bringing us nearer and nearer to quantum computing/simulation actualization. 
+\par
+With more research into decoherence and physical realization of quantum systems, the potential of scalability might be attained. A drawback, however, is that some hamiltonians may take a longer time to minimize, thus making things hard when the simulation involves a bigger number of parameters for these complicated hamiltonians, even with the physical realization available to us.
+\par
+To wrap up, we reflect on what Feynman thought of quantum simulation. As he puts it in his 1982 paper: quantum simulation will give us the ability to explain quantum phenomena, staying consistent with all the known facts and suggesting new facts that are yet to be explained. With the quantum algorithms in place and the discovery of better ways to realize quantum computation, we will eventually realize this idea.
+
+\nocite{MikeAndIke, wong, gentleIntro}
+
+\end{multicols}
+
