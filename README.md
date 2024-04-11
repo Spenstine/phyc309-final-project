@@ -2,9 +2,9 @@
 
 ## Deliverables:
 
-- Scientific paper: qc_final_proj_paper.pdf
+- Scientific paper: qc_finalproj_paper.pdf
 
-        - Built using qc_final_proj_paper.rmd
+        - Built using qc_finalproj_paper.rmd
 
         - See code in the .ipynb file
 
