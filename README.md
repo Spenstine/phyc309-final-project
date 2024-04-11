@@ -2,20 +2,11 @@
 
 ## Deliverables:
 
-- Scientific paper
+- Scientific paper: qc_final_proj_paper.pdf
 
-- Presentation slides
+        - Built using qc_final_proj_paper.rmd
 
-## Navigation
+        - See code in the .ipynb file
 
-- scripts folder
+- Presentation slides: sobiero_final_presentation.pdf
 
-    - contain relevant code
- 
-- images folder
-
-    - images used for the rmd file
- 
-- outputs folder
-
-    - contains the pdf outputs of the deliverables
