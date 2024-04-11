@@ -8,5 +8,5 @@
 
         - See code in the .ipynb file
 
-- Presentation slides: sobiero_final_presentation.pdf
+- Presentation slides: sobiero_finalproj_slides.pdf
 
